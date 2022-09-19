@@ -11,13 +11,16 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    sql = "SELECT id, question FROM Tasks"
+    result = db.session.execute(sql)
+    Tasks = result.fetchall()
+    return render_template("index.html", Tasks = Tasks)
 
 @app.route("/login",methods=["POST"])
 def login():
     username = request.form["username"]
     password = request.form["password"]
-    sql = "SELECT id, password FROM Users WHERE username=:username"
+    sql = "SELECT id, password, teacher FROM Users WHERE username=:username"
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if not user:
@@ -27,6 +30,7 @@ def login():
         hash_value = user.password
         if check_password_hash(hash_value, password):
             session["username"] = username
+            session["teacher"] = user.teacher
             return redirect("/")
         else:
             #TODO: invalid password
@@ -59,3 +63,25 @@ def registration():
     #TODO: check username doesn't exist
     #TODO: Info on successful registration
     return redirect("/")
+
+@app.route("/newtask")
+def newtask():
+    return render_template("newtask.html")
+
+@app.route("/create", methods=["POST"])
+def create():
+    question = request.form["question"]
+    sql = "INSERT INTO Tasks (question) VALUES (:question) RETURNING id"
+    result = db.session.execute(sql, {"question":question})
+    task_id = result.fetchone()[0]
+    choices = request.form.getlist("choice")
+    for choice in choices:
+        if choice != "":
+            if "correct" in choice:
+                correct = True
+            else:
+                correct = False
+            sql = "INSERT INTO Choices (task_id, choice, correct)" \
+                    "VALUES (:task_id,:choice, :correct)"
+    db.session.commit()
+    return render_template("create.html")
