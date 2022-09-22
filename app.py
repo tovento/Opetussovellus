@@ -11,10 +11,10 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    sql = "SELECT id, question FROM Tasks"
+    sql = "SELECT id, name FROM Courses"
     result = db.session.execute(sql)
-    Tasks = result.fetchall()
-    return render_template("index.html", Tasks = Tasks)
+    courses = result.fetchall()
+    return render_template("index.html", courses = courses)
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -31,6 +31,7 @@ def login():
         if check_password_hash(hash_value, password):
             session["username"] = username
             session["teacher"] = user.teacher
+            session["id"] = user.id
             return redirect("/")
         else:
             #TODO: invalid password
@@ -64,15 +65,21 @@ def registration():
     #TODO: Info on successful registration
     return redirect("/")
 
-@app.route("/newtask")
-def newtask():
-    return render_template("newtask.html")
+@app.route("/newtask/<int:course_id>")
+def newtask(course_id):
+    sql = "SELECT name FROM Courses WHERE id = (:course_id)"
+    result = db.session.execute(sql, {"course_id":course_id})
+    course_name = result.fetchone()[0]
+    return render_template("newtask.html", course_id=course_id,
+            course_name=course_name)
 
 @app.route("/create", methods=["POST"])
 def create():
     question = request.form["question"]
-    sql = "INSERT INTO Tasks (question) VALUES (:question) RETURNING id"
-    result = db.session.execute(sql, {"question":question})
+    course_id = request.form["course_id"]
+    sql = "INSERT INTO Tasks (course_id, question)" \
+          "VALUES (:course_id, :question) RETURNING id"
+    result = db.session.execute(sql, {"course_id":course_id, "question":question})
     task_id = result.fetchone()[0]
     choices = request.form.getlist("choice")
     for choice in choices:
@@ -82,6 +89,39 @@ def create():
             else:
                 correct = False
             sql = "INSERT INTO Choices (task_id, choice, correct)" \
-                    "VALUES (:task_id,:choice, :correct)"
+                    "VALUES (:task_id, :choice, :correct)"
     db.session.commit()
     return render_template("create.html")
+
+@app.route("/newcourse")
+def newcourse():
+    return render_template("newcourse.html")
+
+@app.route("/createcourse", methods=["POST"])
+def createcourse():
+    name = request.form["name"]
+    teacher_id = session["id"]
+    sql = "INSERT INTO Courses (name, teacher_id) VALUES" \
+          "(:name, :teacher_id) RETURNING id"
+    result = db.session.execute(sql, {"name":name, "teacher_id":teacher_id})
+    course_id = result.fetchone()[0]
+    db.session.commit()
+    return redirect(f"/coursepage/{course_id}")
+
+@app.route("/coursepage/<int:id>")
+def coursepage(id):
+    sql = "SELECT id, question FROM Tasks WHERE course_id = (:id)"
+    result = db.session.execute(sql, {"id":id})
+    tasks = result.fetchall()
+    sql = "SELECT name, teacher_id FROM Courses WHERE id = (:id)"
+    result = db.session.execute(sql, {"id":id})
+    course = result.fetchone()
+    name = course[0]
+    teacher_id = course[1]
+    return render_template("coursepage.html", id=id, tasks=tasks,
+                           name=name, teacher_id = teacher_id)
+
+@app.route("/task/<int:id>")
+def task(id):
+    #TODO
+    pass

@@ -4,6 +4,7 @@
         <title>Opetussovellus</title>
     </head>
     <body>
+        <h1>{{ course_name }}</h1>
         <form action="/create" method="POST">
             <p>Kysymys:<br>
             <input type="text" name="question"></p>
@@ -23,6 +24,7 @@
             <input type="text" name="choice"><br>
             <input type="radio" name="correct">Oikea vastaus
             </p>
+            <input type="hidden" name="course_id" value={{ course_id }}>
             <input type="submit" value="Luo tehtävä">
         </form>
     </body>

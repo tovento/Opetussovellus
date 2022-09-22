@@ -4,17 +4,18 @@
         <title>Opetussovellus</title>
     </head>
     <body>
+        <h1>Tervetuloa</h1>
         {% if session.username %}
         <p>Olet kirjautunut nimellä {{ session.username }}</p>
         <hr>
-        {% for task in Tasks %}
-        {{ task.question }}<br>
-        <a href="/task/{{ task.id }}"> Vastaa</a>
+        <h2>Käynnissä olevat kurssit:</h2>
+        {% for course in courses %}
+        {{ course.name }}<br>
+        <a href="/course/{{ course.id }}">Kurssisivulle</a>
         <hr>
         {% endfor %}
             {% if session.teacher %}
             <a href="/newcourse">Luo uusi kurssi</a><br>
-            <a href="/newtask">Luo uusi tehtävä</a><br>
             {% endif %}
         <a href="/logout">Kirjaudu ulos</a>
         {% else %}

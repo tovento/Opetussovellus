@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Opetussovellus</title>
+    </head>
+    <body>
+        <h1>{{ name }}</h1>
+        {% if session.teacher and teacher_id == session.id %}
+        <a href="/newtask/{{ id }}">Luo uusi tehtävä</a>
+        {% endif %}
+        {% for task in tasks %}
+        <hr>
+        {{ task.question }}<br>
+        <a href="/task/{{ task.id }}">Vastaa</a>
+        {% endfor %}
+    </body>
+</html>
