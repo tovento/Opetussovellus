@@ -96,7 +96,7 @@ def create():
                                "choice":choices[i],
                                "correct":correct})
     db.session.commit()
-    return render_template("create.html")
+    return render_template("create.html", course_id=course_id)
 
 @app.route("/newcourse")
 def newcourse():
@@ -128,5 +128,26 @@ def coursepage(id):
 
 @app.route("/task/<int:id>")
 def task(id):
-    #TODO
-    pass
+    sql = "SELECT question FROM Tasks WHERE id=:id"
+    result = db.session.execute(sql, {"id":id})
+    question = result.fetchone()[0]
+    sql = "SELECT id, choice FROM Choices WHERE task_id=:id"
+    result = db.session.execute(sql, {"id":id})
+    choices = result.fetchall()
+    return render_template("task.html", id=id, question=question,
+            choices=choices)
+
+@app.route("/answer", methods= ["POST"])
+def answer():
+    task_id = request.form["id"]
+    student_id = session["id"]
+    if "answer" in request.form:
+        choice_id = request.form["answer"]
+        sql = "INSERT INTO Answers (task_id, student_id, choice_id) " \
+              "VALUES (:task_id, :student_id, :choice_id)"
+        db.session.execute(sql,
+                           {"task_id":task_id,
+                           "student_id":student_id,
+                           "choice_id":choice_id})
+        db.session.commit()
+    return redirect("/") #JONNEKIN

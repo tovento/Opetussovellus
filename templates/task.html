@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Opetussovellus</title>
+    </head>
+    <body>
+        <h1>{{question }}</h1>
+        <hr>
+        <form action="/answer" method="POST">
+            {% for choice in choices %}
+            <input type="radio" name="answer" value="{{ choice.id }}">
+                {{ choice.choice }} <br>
+            {% endfor %}
+        <input type="submit" value="Vastaa">
+        <input type="hidden" name="id" value="{{ id }}">
+        </form>
+    </body>
+
+</html>
