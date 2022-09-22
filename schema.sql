@@ -20,8 +20,7 @@ CREATE TABLE Registrations (
 CREATE TABLE Tasks (
 	id SERIAL PRIMARY KEY,
 	course_id INTEGER REFERENCES Courses,
-	question TEXT,
-	created_at TIMESTAMP
+	question TEXT
 );
 
 CREATE TABLE Completions (
