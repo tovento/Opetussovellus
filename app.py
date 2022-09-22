@@ -82,14 +82,19 @@ def create():
     result = db.session.execute(sql, {"course_id":course_id, "question":question})
     task_id = result.fetchone()[0]
     choices = request.form.getlist("choice")
-    for choice in choices:
-        if choice != "":
-            if "correct" in choice:
+    correct_choice = request.form["correct"]
+    for i in range(len(choices)):
+        if choices[i] != "":
+            if i == int(correct_choice):
                 correct = True
             else:
                 correct = False
-            sql = "INSERT INTO Choices (task_id, choice, correct)" \
+            sql = "INSERT INTO Choices (task_id, choice, correct) " \
                     "VALUES (:task_id, :choice, :correct)"
+            db.session.execute(sql,
+                               {"task_id":task_id,
+                               "choice":choices[i],
+                               "correct":correct})
     db.session.commit()
     return render_template("create.html")
 

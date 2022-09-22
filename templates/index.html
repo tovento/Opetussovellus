@@ -11,7 +11,7 @@
         <h2>Käynnissä olevat kurssit:</h2>
         {% for course in courses %}
         {{ course.name }}<br>
-        <a href="/course/{{ course.id }}">Kurssisivulle</a>
+        <a href="/coursepage/{{ course.id }}">Kurssisivulle</a>
         <hr>
         {% endfor %}
             {% if session.teacher %}
