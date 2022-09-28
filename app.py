@@ -14,7 +14,7 @@ def index():
     sql = "SELECT id, name FROM Courses"
     result = db.session.execute(sql)
     courses = result.fetchall()
-    return render_template("index.html", courses = courses)
+    return render_template("index.html", courses=courses)
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -51,7 +51,7 @@ def registration():
     username = request.form["username"]
     password = request.form["password"]
     if "teacher" in request.form:
-        teacher = request.form["teacher"]
+        teacher = True
     else:
         teacher = False
     hash_value = generate_password_hash(password)
@@ -67,7 +67,7 @@ def registration():
 
 @app.route("/newtask/<int:course_id>")
 def newtask(course_id):
-    sql = "SELECT name FROM Courses WHERE id = (:course_id)"
+    sql = "SELECT name FROM Courses WHERE id=:course_id"
     result = db.session.execute(sql, {"course_id":course_id})
     course_name = result.fetchone()[0]
     return render_template("newtask.html", course_id=course_id,
@@ -85,10 +85,7 @@ def create():
     correct_choice = request.form["correct"]
     for i in range(len(choices)):
         if choices[i] != "":
-            if i == int(correct_choice):
-                correct = True
-            else:
-                correct = False
+            correct = i == int(correct_choice)
             sql = "INSERT INTO Choices (task_id, choice, correct) " \
                     "VALUES (:task_id, :choice, :correct)"
             db.session.execute(sql,
@@ -106,7 +103,7 @@ def newcourse():
 def createcourse():
     name = request.form["name"]
     teacher_id = session["id"]
-    sql = "INSERT INTO Courses (name, teacher_id) VALUES" \
+    sql = "INSERT INTO Courses (name, teacher_id) VALUES " \
           "(:name, :teacher_id) RETURNING id"
     result = db.session.execute(sql, {"name":name, "teacher_id":teacher_id})
     course_id = result.fetchone()[0]
@@ -115,16 +112,16 @@ def createcourse():
 
 @app.route("/coursepage/<int:id>")
 def coursepage(id):
-    sql = "SELECT id, question FROM Tasks WHERE course_id = (:id)"
+    sql = "SELECT id, question FROM Tasks WHERE course_id=:id"
     result = db.session.execute(sql, {"id":id})
     tasks = result.fetchall()
-    sql = "SELECT name, teacher_id FROM Courses WHERE id = (:id)"
+    sql = "SELECT name, teacher_id FROM Courses WHERE id=:id"
     result = db.session.execute(sql, {"id":id})
     course = result.fetchone()
     name = course[0]
     teacher_id = course[1]
     return render_template("coursepage.html", id=id, tasks=tasks,
-                           name=name, teacher_id = teacher_id)
+                           name=name, teacher_id=teacher_id)
 
 @app.route("/task/<int:id>")
 def task(id):
