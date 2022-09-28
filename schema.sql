@@ -1,6 +1,6 @@
 CREATE TABLE Users (
 	id SERIAL PRIMARY KEY,
-	username TEXT,
+	username TEXT UNIQUE,
 	password TEXT,
 	teacher BOOLEAN
 );
@@ -19,7 +19,8 @@ CREATE TABLE Registrations (
 
 CREATE TABLE Tasks (
 	id SERIAL PRIMARY KEY,
-	course_id INTEGER REFERENCES Courses,
+	course_id INTEGER REFERENCES Courses
+		ON DELETE CASCADE,
 	question TEXT
 );
 
@@ -31,14 +32,15 @@ CREATE TABLE Completions (
 
 CREATE TABLE Choices (
 	id SERIAL PRIMARY KEY,
-	task_id INTEGER REFERENCES Tasks,
+	task_id INTEGER REFERENCES Tasks
+		ON DELETE CASCADE,
 	choice TEXT,
 	correct BOOLEAN
 );
 
 CREATE TABLE Answers (
 	id SERIAL PRIMARY KEY,
-	task_id INTEGER REFERENCES Tasks,
 	student_id INTEGER REFERENCES Users,
-	answer TEXT
+	choice_id INTEGER REFERENCES Choices
+		ON DELETE CASCADE
 );
