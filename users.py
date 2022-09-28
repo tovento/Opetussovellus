@@ -33,4 +33,3 @@ def register(username, password, teacher):
     except:
         return False
     return True
-

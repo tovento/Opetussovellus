@@ -17,8 +17,8 @@ def login():
     if users.login(username, password):
         return redirect("/")
     else:
-        #TODO
-        pass
+        return render_template("error.html", message=
+                               "Virheellinen käyttäjätunnus tai salasana")
 
 @app.route("/logout")
 def logout():
@@ -32,19 +32,21 @@ def register():
 @app.route("/registration", methods=["POST"])
 def registration():
     username = request.form["username"]
-    password = request.form["password"]
+    password1 = request.form["password1"]
+    password2 = request.form["password2"]
+    if password1 != password2:
+        return render_template("error.html", message=
+                               "Salasanat eivät ole identtiset.")
     if "teacher" in request.form:
         teacher = True
     else:
         teacher = False
     
-    # TODO: check 2 passwords match
-    if users.register(username, password, teacher):
+    if users.register(username, password1, teacher):
         return redirect("/")
     else:
-        #TODO: check username doesn't exist
-        #TODO: Info on successful registration
-        pass
+        return render_template("error.html", message=
+                               "Rekisteröinnissä tapahtui virhe")
 
 @app.route("/newcourse", methods=["GET", "POST"])
 def newcourse():
