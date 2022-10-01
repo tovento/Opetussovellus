@@ -82,12 +82,7 @@ def create():
 
 @app.route("/task/<int:id>")
 def task(id):
-    sql = "SELECT question FROM Tasks WHERE id=:id"
-    result = db.session.execute(sql, {"id":id})
-    question = result.fetchone()[0]
-    sql = "SELECT id, choice FROM Choices WHERE task_id=:id"
-    result = db.session.execute(sql, {"id":id})
-    choices = result.fetchall()
+    question, choices = courses.task(id)
     return render_template("task.html", id=id, question=question,
             choices=choices)
 
@@ -97,11 +92,16 @@ def answer():
     student_id = session["id"]
     if "answer" in request.form:
         choice_id = request.form["answer"]
-        sql = "INSERT INTO Answers (task_id, student_id, choice_id) " \
-              "VALUES (:task_id, :student_id, :choice_id)"
-        db.session.execute(sql,
-                           {"task_id":task_id,
-                           "student_id":student_id,
-                           "choice_id":choice_id})
-        db.session.commit()
-    return redirect("/") #JONNEKIN
+    else:
+        return render_template("error.html", message="Vastaus puuttuu")
+       # tämän sijaan viesti ilman sivun muuttamista?
+    answer_id = courses.submit_answer(task_id, student_id, choice_id)
+    return redirect(f"/result/{answer_id}")
+
+@app.route("/result/<int:answer_id>", methods = ["GET"])
+def result(answer_id):
+    # TODO: tarkasta oikeus katsella tulosta
+    correct = courses.check_answer(answer_id)
+    course_id = courses.courseid(answer_id)
+    return render_template("result.html", result_id=answer_id, correct=correct,
+                           course_id=course_id)

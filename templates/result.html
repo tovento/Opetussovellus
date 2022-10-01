@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Opetussovellus</title>
+    </head>
+    <body>
+        <h1>Tulos</h1>
+        {% if correct %}
+        <p>Oikea vastaus!</p>
+        {% else %}
+        <p>Väärä vastaus.</p>
+        {% endif %}
+        <hr>
+        <a href="/coursepage/{{ course_id }}">Kurssisivulle</a>
+    </body>
+</html>
