@@ -8,10 +8,31 @@
         {% if session.teacher and teacher_id == session.id %}
         <a href="/newtask/{{ id }}">Luo uusi tehtävä</a>
         {% endif %}
+        
         {% for task in tasks %}
         <hr>
         {{ task.question }}<br>
         <a href="/task/{{ task.id }}">Vastaa</a>
         {% endfor %}
+        
+        <hr>
+        <h2>Oma edistyminen</h2>
+        <h3>Suoritetut tehtävät:</h3>
+        <ul>
+        {% for task in completed_tasks %}
+        <li>{{ task[1]  }} </li>
+        {% endfor %}
+        </ul>
+        <h3>Suoritettavat tehtävät:</h3>
+        <ul>
+        {% for task in tasks %}
+        {% if task not in completed_tasks %}
+        <li>{{ task.question }}</li>
+        {% endif %}
+        {% endfor %}
+        </ul>
+        
+        <hr>
+        <a href="/">Etusivulle</a>
     </body>
 </html>

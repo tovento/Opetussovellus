@@ -61,8 +61,12 @@ def newcourse():
 @app.route("/coursepage/<int:id>")
 def coursepage(id):
     tasks, name, teacher_id = courses.coursepage(id)
+
+    user_id = users.user_id()
+    completed_tasks = courses.completed_tasks(user_id, id)
     return render_template("coursepage.html", id=id, tasks=tasks,
-                           name=name, teacher_id=teacher_id)
+                           name=name, teacher_id=teacher_id,
+                           completed_tasks=completed_tasks)
 
 @app.route("/newtask/<int:course_id>")
 def newtask(course_id):
@@ -89,19 +93,22 @@ def task(id):
 @app.route("/answer", methods= ["POST"])
 def answer():
     task_id = request.form["id"]
-    student_id = session["id"]
+    user_id = users.user_id()
     if "answer" in request.form:
         choice_id = request.form["answer"]
     else:
         return render_template("error.html", message="Vastaus puuttuu")
        # tämän sijaan viesti ilman sivun muuttamista?
-    answer_id = courses.submit_answer(task_id, student_id, choice_id)
-    return redirect(f"/result/{answer_id}")
+    answer_id = courses.submit_answer(task_id, user_id, choice_id)
+    return redirect(f"/result/{task_id}/{answer_id}")
 
-@app.route("/result/<int:answer_id>", methods = ["GET"])
-def result(answer_id):
+@app.route("/result/<int:task_id>/<int:answer_id>", methods = ["GET"])
+def result(task_id, answer_id):
     # TODO: tarkasta oikeus katsella tulosta
+    user_id = users.user_id()
     correct = courses.check_answer(answer_id)
     course_id = courses.courseid(answer_id)
+    if correct:
+        courses.complete_task(user_id, task_id)
     return render_template("result.html", result_id=answer_id, correct=correct,
                            course_id=course_id)

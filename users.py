@@ -21,6 +21,9 @@ def login(username, password):
 def logout():
     del session["username"]
 
+def user_id():
+    return session["id"]
+
 def register(username, password, teacher):
     hash_value = generate_password_hash(password)
     try:

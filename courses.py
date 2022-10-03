@@ -18,6 +18,7 @@ def coursepage(id):
     course = result.fetchone()
     name = course[0]
     teacher_id = course[1]
+
     return (tasks, name, teacher_id)
 
 def coursename(course_id):
@@ -75,3 +76,19 @@ def check_answer(answer_id):
     result = db.session.execute(sql, {"answer_id":answer_id})
     correct = result.fetchone()[0]
     return correct
+
+def complete_task(student_id, task_id):
+    sql = "INSERT INTO Completions (student_id, task_id) " \
+          "VALUES (:student_id, :task_id)"
+    db.session.execute(sql, {"student_id":student_id, "task_id":task_id})
+    db.session.commit()
+
+def completed_tasks(user_id, course_id):
+    sql = "SELECT C.task_id, T.question FROM Completions C, Tasks T "\
+          "WHERE C.student_id=:user_id AND T.course_id=:course_id " \
+          "AND T.id=C.task_id"
+    result = db.session.execute(sql,
+                                {"user_id":user_id,
+                                "course_id":course_id})
+    completed_tasks = result.fetchall()
+    return completed_tasks
