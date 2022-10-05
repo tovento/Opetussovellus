@@ -11,7 +11,9 @@
         <form action="/deleted/{{ course_id }}/{{ task_id }}" method="POST">
             <input type="radio" name="no_yes" value="no" checked>Ei</input><br>
             <input type="radio" name="no_yes" value="yes">Kyllä</input><br>
+
             <input type="submit" value="Vahvista"></input>
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
     </body>
 </html>

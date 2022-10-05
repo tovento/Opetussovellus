@@ -26,6 +26,7 @@
             </p>
             <input type="hidden" name="course_id" value={{ course_id }}>
             <input type="submit" value="Luo tehtävä">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
     </body>
 </html>

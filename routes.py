@@ -53,6 +53,7 @@ def newcourse():
     if request.method == "GET":
         return render_template("newcourse.html")
     if request.method == "POST":
+        users.check_csrf()
         name = request.form["name"]
         teacher_id = session["id"]
         course_id = courses.newcourse(name, teacher_id)
@@ -76,6 +77,7 @@ def newtask(course_id):
 
 @app.route("/create/", methods=["POST"])
 def create():
+    users.check_csrf()
     question = request.form["question"]
     course_id = request.form["course_id"]
     choices = request.form.getlist("choice")
@@ -93,6 +95,7 @@ def task(id):
 
 @app.route("/answer", methods= ["POST"])
 def answer():
+    users.check_csrf()
     task_id = request.form["id"]
     user_id = users.user_id()
     if "answer" in request.form:
@@ -130,11 +133,13 @@ def delete(course_id, task_id):
 
 @app.route("/deleted/<int:course_id>/<int:task_id>", methods=["POST"])
 def deleted(course_id, task_id):
+    users.check_csrf()
+
     no_yes = request.form["no_yes"]
-    print(no_yes)
     if no_yes == "yes":
         if not courses.delete_task(task_id):
             return render_template("error.html",
                         message="Tehtävän poistaminen ei onnistunut.")
+
     return render_template("deleted.html", course_id=course_id,
                            no_yes=no_yes)

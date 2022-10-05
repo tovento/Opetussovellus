@@ -9,6 +9,7 @@
             <p>Kurssin nimi:<br>
             <input type="text" name="name"></p>
             <input type="submit" value="Luo kurssi">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
     </body>
 </html>
