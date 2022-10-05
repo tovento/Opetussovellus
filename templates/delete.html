@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Opetussovellus</title>
+    </head>
+    <body>
+        <h1>Poista tehtävä?</h1>
+        <p>Haluatko varmasti poistaa kurssin <b>{{ course_name }}</b> tehtävän
+        <b>{{ task_question }}</b> ? </p><br>
+
+        <form action="/deleted/{{ course_id }}/{{ task_id }}" method="POST">
+            <input type="radio" name="no_yes" value="no" checked>Ei</input><br>
+            <input type="radio" name="no_yes" value="yes">Kyllä</input><br>
+            <input type="submit" value="Vahvista"></input>
+        </form>
+    </body>
+</html>

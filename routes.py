@@ -86,7 +86,8 @@ def create():
 
 @app.route("/task/<int:id>")
 def task(id):
-    question, choices = courses.task(id)
+    question = courses.task_question(id)
+    choices = courses.task_choices(id)
     return render_template("task.html", id=id, question=question,
             choices=choices)
 
@@ -112,3 +113,28 @@ def result(task_id, answer_id):
         courses.complete_task(user_id, task_id)
     return render_template("result.html", result_id=answer_id, correct=correct,
                            course_id=course_id)
+
+@app.route("/delete/<int:course_id>/<int:task_id>")
+def delete(course_id, task_id):
+    user_id = users.user_id()
+    if session["teacher"]:
+        course_teacher = courses.course_teacher(course_id)
+        if course_teacher == user_id:
+            course_name = courses.coursename(course_id)
+            task_question = courses.task_question(task_id)
+            return render_template("delete.html", course_name=course_name,
+                            course_id=course_id, task_question=task_question,
+                            task_id=task_id)
+    return render_template("error.html", message=
+                           "Sinulla ei ole oikeutta katsella tätä sivua.")
+
+@app.route("/deleted/<int:course_id>/<int:task_id>", methods=["POST"])
+def deleted(course_id, task_id):
+    no_yes = request.form["no_yes"]
+    print(no_yes)
+    if no_yes == "yes":
+        if not courses.delete_task(task_id):
+            return render_template("error.html",
+                        message="Tehtävän poistaminen ei onnistunut.")
+    return render_template("deleted.html", course_id=course_id,
+                           no_yes=no_yes)

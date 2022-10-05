@@ -12,7 +12,10 @@
         {% for task in tasks %}
         <hr>
         {{ task.question }}<br>
-        <a href="/task/{{ task.id }}">Vastaa</a>
+        <a href="/task/{{ task.id }}">Vastaa</a><br>
+        {% if session.teacher and teacher_id == session.id %}
+        <a href="/delete/{{ id }}/{{ task.id }}">Poista tehtävä</a>
+        {% endif %}
         {% endfor %}
         
         <hr>

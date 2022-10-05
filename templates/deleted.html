@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Opetussovellus</title>
+    </head>
+    <body>
+        {% if no_yes == "yes" %}
+        <p>Poistettu tehtävä kurssilta.</p>
+        {% elif no_yes == "no" %}
+        <p>Tehtävää ei poistettu.</p>
+        {% endif %}
+        <a href="/coursepage/{{ course_id }}">Kurssisivulle</a>
+    </body>
+</html>
