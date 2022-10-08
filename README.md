@@ -9,16 +9,20 @@ Sovelluksen tämänhetkiset toiminnallisuudet:
 * Opettajat voivat luoda kursseja sovelluksessa.
 * Opettajat voivat lisätä kurssialueille tehtäviä.
 * Tehtävät ovat monivalintatehtäviä.
-* Tehtäviin voi vastata ja vastaukset menevät tietokantaan, mutta toistaiseksi
-  sovellus ei käsittele vastauksia tämän pidemmälle.
+* Käyttäjät voivat vastata tehtäviin. He saavat palautteen siitä, oliko vastaus
+  oikein vai väärin.
+* Käyttäjät näkevät kurssisivulla listattuina:
+    * tehtävät, joihin ovat jo vastanneet oikein
+    * tehtävät, jotka ovat vielä tekemättä
+* Opettajat voivat poistaa itse lisäämiään tehtäviä.
+
 
 Työn alla olevat ominaisuudet:
 
-* Rekisteröitymisen ja kirjautumisen ongelmatilanteet käsiteltävä.
-* Tehtävien vastausten käsittely.
-* Tehtäviin mahdollisesti monipuolisuutta (vapaata tekstiä, valintaruutuja).
-* Käyttäjille  mahdollisuus suorittaa tehtäviä ja läpäistä kursseja.
-* Opettajille mahdollisuus muokata ja poistaa itse luomiaan kursseja.
+* Sovelluksen ulkoasun parantaminen.
+* Varmistetaan käyttäjän oikeudet katsella kutakin sivua. Esimerkiksi
+  result-sivulla vielä korjattavaa.
+* Sovelluksen käyttömukavuuden parantaminen.
 
 Sovellus on testattavissa
 [Herokussa](https://enigmatic-headland-82484.herokuapp.com/).
