@@ -18,7 +18,7 @@ def login():
         return redirect("/")
     else:
         return render_template("error.html", message=
-                               "Virheellinen käyttäjätunnus tai salasana")
+                               "Virheellinen käyttäjätunnus tai salasana.")
 
 @app.route("/logout")
 def logout():
@@ -46,7 +46,7 @@ def registration():
         return redirect("/")
     else:
         return render_template("error.html", message=
-                               "Rekisteröinnissä tapahtui virhe")
+                               "Rekisteröinnissä tapahtui virhe.")
 
 @app.route("/newcourse", methods=["GET", "POST"])
 def newcourse():
@@ -78,10 +78,16 @@ def newtask(course_id):
 @app.route("/create/", methods=["POST"])
 def create():
     users.check_csrf()
+
     question = request.form["question"]
     course_id = request.form["course_id"]
     choices = request.form.getlist("choice")
-    correct_choice = request.form["correct"]
+    if "correct" in request.form:
+        correct_choice = request.form["correct"]
+    else:
+        return render_template("error.html", message="Oikea vastaus puuttuu.",
+                course_id=course_id)
+        #tämän sijaan viesti ilman sivun muuttamista?
 
     courses.newtask(course_id, question, choices, correct_choice)
     return render_template("create.html", course_id=course_id)
@@ -101,7 +107,9 @@ def answer():
     if "answer" in request.form:
         choice_id = request.form["answer"]
     else:
-        return render_template("error.html", message="Vastaus puuttuu")
+        course_id = courses.courseid_from_task(task_id)
+        return render_template("error.html", message="Vastaus puuttuu.",
+                               course_id=course_id)
        # tämän sijaan viesti ilman sivun muuttamista?
     answer_id = courses.submit_answer(task_id, user_id, choice_id)
     return redirect(f"/result/{task_id}/{answer_id}")
@@ -111,7 +119,7 @@ def result(task_id, answer_id):
     # TODO: tarkasta oikeus katsella tulosta
     user_id = users.user_id()
     correct = courses.check_answer(answer_id)
-    course_id = courses.courseid(answer_id)
+    course_id = courses.courseid_from_answer(answer_id)
     if correct:
         courses.complete_task(user_id, task_id)
     return render_template("result.html", result_id=answer_id, correct=correct,

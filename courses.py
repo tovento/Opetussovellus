@@ -27,7 +27,14 @@ def coursename(course_id):
     course_name = result.fetchone()[0]
     return course_name
 
-def courseid(answer_id):
+def courseid_from_task(task_id):
+    sql = "SELECT C.id FROM Courses C, Tasks T WHERE T.id=:task_id " \
+          "AND T.course_id=C.id"
+    result = db.session.execute(sql,{"task_id":task_id})
+    course_id = result.fetchone()[0]
+    return course_id
+
+def courseid_from_answer(answer_id):
     sql = "SELECT C.id FROM Courses C, Tasks T, Choices Ch, Answers A " \
           "WHERE A.id=:answer_id AND A.choice_id=Ch.id AND Ch.task_id=T.id " \
           "AND T.course_id=C.id"

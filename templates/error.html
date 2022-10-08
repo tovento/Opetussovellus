@@ -6,6 +6,10 @@
     <body>
         <h1>Virhe</h1>
         <p>{{ message }}</p>
+
+        {% if course_id %}
+        <a href="/coursepage/{{course_id}}">Kurssisivulle</a><br>
+        {% endif %}
         <a href="/">Etusivulle</a>
     </body>
 </html>
