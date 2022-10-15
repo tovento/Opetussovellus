@@ -2,12 +2,14 @@
 <html>
     <head>
         <title>Opetussovellus</title>
+        <script src="/static/check_choice.js"></script>
     </head>
     <body>
         <h1>{{ course_name }}</h1>
-        <form action="/create" method="POST">
+        <form name="f1" action="/create" method="POST">
             <p>Kysymys:<br>
             <input type="text" name="question"></p>
+
             <p>Vaihtoehto 1:<br>
             <input type="text" name="choice"><br>
             <input type="radio" name="correct" value=0>Oikea vastaus
@@ -24,8 +26,14 @@
             <input type="text" name="choice"><br>
             <input type="radio" name="correct" value=3>Oikea vastaus
             </p>
+
+            <button type="button"
+                    onclick="check_choice(
+                        'f1', 'correct', 'Oikea vastaus puuttuu')">
+                Luo tehtävä
+            </button>
+
             <input type="hidden" name="course_id" value={{ course_id }}>
-            <input type="submit" value="Luo tehtävä">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         <hr>

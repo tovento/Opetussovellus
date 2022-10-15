@@ -87,7 +87,6 @@ def create():
     else:
         return render_template("error.html", message="Oikea vastaus puuttuu.",
                 course_id=course_id)
-        #tämän sijaan viesti ilman sivun muuttamista?
 
     courses.newtask(course_id, question, choices, correct_choice)
     return render_template("create.html", course_id=course_id)
@@ -110,7 +109,7 @@ def answer():
         course_id = courses.courseid_from_task(task_id)
         return render_template("error.html", message="Vastaus puuttuu.",
                                course_id=course_id)
-       # tämän sijaan viesti ilman sivun muuttamista?
+
     answer_id = courses.submit_answer(task_id, user_id, choice_id)
     return redirect(f"/result/{task_id}/{answer_id}")
 
