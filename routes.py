@@ -115,12 +115,19 @@ def answer():
 
 @app.route("/result/<int:task_id>/<int:answer_id>", methods = ["GET"])
 def result(task_id, answer_id):
-    # TODO: tarkasta oikeus katsella tulosta
     user_id = users.user_id()
+    student_id = courses.studentid_from_answer(answer_id)
+
+    if user_id != student_id:
+        return render_template("error.html", message=
+                               "Sinulla ei ole oikeutta katsella tätä sivua.")
+
     correct = courses.check_answer(answer_id)
     course_id = courses.courseid_from_answer(answer_id)
+
     if correct:
         courses.complete_task(user_id, task_id)
+
     return render_template("result.html", result_id=answer_id, correct=correct,
                            course_id=course_id)
 

@@ -42,6 +42,15 @@ def courseid_from_answer(answer_id):
     course_id = result.fetchone()[0]
     return course_id
 
+def studentid_from_answer(answer_id):
+    sql = "SELECT student_id FROM Answers WHERE id=:answer_id"
+    result = db.session.execute(sql, {"answer_id":answer_id})
+    student_id = result.fetchone()
+    if student_id == None:
+        return student_id
+    else:
+        return student_id[0]
+
 def course_teacher(course_id):
     sql = "SELECT teacher_id FROM Courses WHERE id=:course_id"
     result = db.session.execute(sql, {"course_id":course_id})
