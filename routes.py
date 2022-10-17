@@ -91,12 +91,12 @@ def create():
     courses.newtask(course_id, question, choices, correct_choice)
     return render_template("create.html", course_id=course_id)
 
-@app.route("/task/<int:id>")
-def task(id):
+@app.route("/task/<int:course_id>/<int:id>")
+def task(course_id, id):
     question = courses.task_question(id)
     choices = courses.task_choices(id)
     return render_template("task.html", id=id, question=question,
-            choices=choices)
+            choices=choices, course_id=course_id)
 
 @app.route("/answer", methods= ["POST"])
 def answer():
