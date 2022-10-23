@@ -2,6 +2,7 @@ from app import app
 from db import db
 from flask import render_template, redirect, request, session
 import users, courses
+import re
 
 @app.route("/")
 def index():
@@ -34,9 +35,16 @@ def registration():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+    if len(password1) < 8:
+        return render_template("error.html", message=
+                               "Salasanan tulee olla vähintään 8 merkkiä pitkä.")
     if password1 != password2:
         return render_template("error.html", message=
                                "Salasanat eivät ole identtiset.")
+    if len(username) == 0 or re.search("[^a-zA-Z0-9_.]", username):
+        return render_template("error.html", message=
+                               "Käyttäjätunnus ei kelpaa. Ethän käytä " \
+                               "erikoismerkkejä.")
     if "teacher" in request.form:
         teacher = True
     else:
