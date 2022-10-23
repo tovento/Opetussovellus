@@ -11,12 +11,6 @@ CREATE TABLE Courses (
 	teacher_id INTEGER REFERENCES Users
 );
 
-CREATE TABLE Registrations (
-	id SERIAL PRIMARY KEY,
-	course_id INTEGER REFERENCES Courses,
-	student_id INTEGER REFERENCES Users
-);
-
 CREATE TABLE Tasks (
 	id SERIAL PRIMARY KEY,
 	course_id INTEGER REFERENCES Courses
