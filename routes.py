@@ -68,7 +68,7 @@ def newcourse():
                                    "Opiskelijoilla ei ole oikeutta " \
                                    "luoda kursseja.")
         name = request.form["name"]
-        teacher_id = session["id"]
+        teacher_id = users.user_id()
         course_id = courses.newcourse(name, teacher_id)
         return redirect(f"/coursepage/{course_id}")
 
@@ -98,7 +98,7 @@ def create():
 
     teacher_id = courses.course_teacher(course_id)
 
-    if not session["teacher"] or session["id"] != teacher_id:
+    if not session["teacher"] or users.user_id() != teacher_id:
         return render_template("error.html", message=
                                "Sinulla ei ole oikeutta lisätä " \
                                "tehtäviä kurssialueelle.")
