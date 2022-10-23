@@ -62,6 +62,11 @@ def newcourse():
         return render_template("newcourse.html")
     if request.method == "POST":
         users.check_csrf()
+
+        if not session["teacher"]:
+            return render_template("error.html", message=
+                                   "Opiskelijoilla ei ole oikeutta " \
+                                   "luoda kursseja.")
         name = request.form["name"]
         teacher_id = session["id"]
         course_id = courses.newcourse(name, teacher_id)
@@ -90,6 +95,14 @@ def create():
     question = request.form["question"]
     course_id = request.form["course_id"]
     choices = request.form.getlist("choice")
+
+    teacher_id = courses.course_teacher(course_id)
+
+    if not session["teacher"] or session["id"] != teacher_id:
+        return render_template("error.html", message=
+                               "Sinulla ei ole oikeutta lisätä " \
+                               "tehtäviä kurssialueelle.")
+
     if "correct" in request.form:
         correct_choice = request.form["correct"]
     else:
