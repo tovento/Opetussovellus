@@ -16,5 +16,5 @@ Sovelluksen toiminnallisuudet:
     * tehtävät, jotka ovat vielä tekemättä
 * Opettajat voivat poistaa itse lisäämiään tehtäviä.
 
-Sovellus on testattavissa
-[Herokussa](https://enigmatic-headland-82484.herokuapp.com/).
+~~Sovellus on testattavissa
+[Herokussa](https://enigmatic-headland-82484.herokuapp.com/).~~
